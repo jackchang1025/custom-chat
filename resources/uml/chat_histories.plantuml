@@ -1,0 +1,154 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class chat_histories {
+   id: char(36)
+   chatbot_id: char(36)
+   session_id: varchar(255)
+   from: varchar(255)
+   message: text
+   created_at: timestamp
+   updated_at: timestamp
+}
+class chatbot_settings {
+   id: char(36)
+   chatbot_id: char(36)
+   name: varchar(255)
+   value: varchar(255)
+   created_at: timestamp
+   updated_at: timestamp
+}
+class chatbots {
+   id: char(36)
+   name: varchar(255)
+   token: varchar(255)
+   website: varchar(255)
+   status: varchar(255)
+   prompt_message: text
+   enhanced_privacy: tinyint(1)
+   smart_sync: tinyint(1)
+   created_at: timestamp
+   updated_at: timestamp
+   deleted_at: timestamp
+}
+class codebase_data_sources {
+   id: char(36)
+   chatbot_id: char(36)
+   repository: varchar(255)
+   ingested_at: datetime
+   ingestion_status: varchar(255)
+   created_at: timestamp
+   updated_at: timestamp
+}
+class crawled_pages {
+   chatbot_id: char(36)
+   website_data_source_id: char(36)
+   url: varchar(255)
+   title: varchar(255)
+   status_code: varchar(255)
+   aws_url: text
+   created_at: timestamp
+   updated_at: timestamp
+   id: char(36)
+}
+class failed_jobs {
+   uuid: varchar(255)
+   connection: text
+   queue: text
+   payload: longtext
+   exception: longtext
+   failed_at: timestamp
+   id: bigint unsigned
+}
+class jobs {
+   queue: varchar(255)
+   payload: longtext
+   attempts: tinyint unsigned
+   reserved_at: int unsigned
+   available_at: int unsigned
+   created_at: int unsigned
+   id: bigint unsigned
+}
+class migrations {
+   migration: varchar(255)
+   batch: int
+   id: int unsigned
+}
+class notion_data_sources {
+   created_at: timestamp
+   updated_at: timestamp
+   id: bigint unsigned
+}
+class onboarding_steps {
+   id: char(36)
+   chatbot_id: char(36)
+   name: varchar(255)
+   finished: tinyint(1)
+   created_at: timestamp
+   updated_at: timestamp
+}
+class password_reset_tokens {
+   token: varchar(255)
+   created_at: timestamp
+   email: varchar(255)
+}
+class pdf_data_sources {
+   chatbot_id: char(36)
+   files: json
+   folder_name: varchar(255)
+   created_at: timestamp
+   updated_at: timestamp
+   ingest_status: varchar(255)
+   id: char(36)
+}
+class personal_access_tokens {
+   tokenable_type: varchar(255)
+   tokenable_id: bigint unsigned
+   name: varchar(255)
+   token: varchar(64)
+   abilities: text
+   last_used_at: timestamp
+   expires_at: timestamp
+   created_at: timestamp
+   updated_at: timestamp
+   id: bigint unsigned
+}
+class text_data_sources {
+   created_at: timestamp
+   updated_at: timestamp
+   id: bigint unsigned
+}
+class users {
+   name: varchar(255)
+   email: varchar(255)
+   email_verified_at: timestamp
+   password: varchar(255)
+   remember_token: varchar(100)
+   created_at: timestamp
+   updated_at: timestamp
+   id: bigint unsigned
+}
+class website_data_sources {
+   id: char(36)
+   chatbot_id: char(36)
+   root_url: varchar(255)
+   icon: varchar(255)
+   vector_databased_last_ingested_at: datetime
+   crawling_status: varchar(255)
+   crawling_progress: double(8,2)
+   created_at: timestamp
+   updated_at: timestamp
+}
+
+chat_histories          -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+chatbot_settings        -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+codebase_data_sources   -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+crawled_pages           -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+crawled_pages           -[#595959,plain]-^  website_data_sources   : "website_data_source_id:id"
+onboarding_steps        -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+pdf_data_sources        -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+website_data_sources    -[#595959,plain]-^  chatbots               : "chatbot_id:id"
+@enduml
