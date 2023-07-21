@@ -5,8 +5,10 @@ namespace App\Http\Services;
 use App\Http\Requests\UploadPdfFilesRequest;
 use App\Models\Chatbot;
 use App\Models\PdfDataSource;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Mindwave\Mindwave\Facades\DocumentLoader;
 use Ramsey\Uuid\Uuid;
 
 class HandlePdfDataSource
@@ -17,6 +19,7 @@ class HandlePdfDataSource
 
     public function handle(): PdfDataSource
     {
+
         $dataSource = new PdfDataSource();
         $dataSource->setChatbotId($this->bot->getId());
         $dataSource->setId(Uuid::uuid4());
@@ -29,7 +32,7 @@ class HandlePdfDataSource
             $fileName = Str::random(20) . '.' . $extension;
             // random folder name
             try {
-                $file->storeAs($folderName, $fileName, ['disk' => 'shared_volume']);
+                $file->storeAs($folderName, $fileName);
                 $filesUrls[] = $fileName;
             } catch (\Exception $e) {
                 // Handle exception

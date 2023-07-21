@@ -10,6 +10,40 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\Chatbot
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $token
+ * @property string|null $website
+ * @property string $status
+ * @property string $prompt_message
+ * @property int $enhanced_privacy
+ * @property int $smart_sync
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChatHistory> $messages
+ * @property-read int|null $messages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChatbotSetting> $settings
+ * @property-read int|null $settings_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereEnhancedPrivacy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot wherePromptMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereSmartSync($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chatbot whereWebsite($value)
+ * @mixin \Eloquent
+ */
 class Chatbot extends Model
 {
     use HasFactory;

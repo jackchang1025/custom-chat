@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PdfDataSourceController;
 use App\Http\Controllers\WebsiteDataSourceController;
+use App\Http\Middleware\IframeMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,5 +75,8 @@ Route::middleware([])->group(function () {
 
 });
 
-Route::get('/chat/{token}', [ChatbotController::class, 'getChatView'])->name('chat')->withoutMiddleware([FrameGuard::class])->middleware([IframeMiddleware::class]);
+Route::get('/chat/{token}', [ChatbotController::class, 'getChatView'])->name('chat')
+    ->withoutMiddleware([FrameGuard::class])
+    ->middleware([IframeMiddleware::class]);
+
 Route::post('/chat/{token}/send-message', [ChatbotController::class, 'sendMessage'])->name('sendMessage');

@@ -8,6 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\CodebaseDataSource
+ *
+ * @property string $id
+ * @property string $chatbot_id
+ * @property string $repository
+ * @property \Illuminate\Support\Carbon|null $ingested_at
+ * @property string|null $ingestion_status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chatbot|null $chatbot
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereChatbotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereIngestedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereIngestionStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereRepository($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CodebaseDataSource whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class CodebaseDataSource extends Model
 {
     use HasFactory;

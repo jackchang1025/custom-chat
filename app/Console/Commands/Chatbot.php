@@ -17,10 +17,6 @@ class Chatbot extends Command
 
     public function handle()
     {
-//        $agent = new Agent(
-//            llm: new OpenAIChat(OpenAI::client(env('OPENAI_API_KEY'))),
-//            messageHistory: ConversationBufferMemory::fromMessages([]),
-//        );
 
         $agent = Mindwave::agent(
             memory: ConversationBufferMemory::fromMessages([])

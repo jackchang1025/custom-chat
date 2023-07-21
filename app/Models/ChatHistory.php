@@ -7,6 +7,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\ChatHistory
+ *
+ * @property int $id
+ * @property string $chatbot_id
+ * @property string|null $session_id
+ * @property string $from
+ * @property string $message
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chatbot|null $chatbot
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereChatbotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereSessionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class ChatHistory extends Model
 {
     use HasFactory;

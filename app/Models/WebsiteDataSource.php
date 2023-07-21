@@ -9,6 +9,33 @@ use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\WebsiteDataSource
+ *
+ * @property string $id
+ * @property string $chatbot_id
+ * @property string $root_url
+ * @property string|null $icon
+ * @property string|null $vector_databased_last_ingested_at
+ * @property string $crawling_status
+ * @property float $crawling_progress
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chatbot|null $chatbot
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource query()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereChatbotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereCrawlingProgress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereCrawlingStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereRootUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebsiteDataSource whereVectorDatabasedLastIngestedAt($value)
+ * @mixin \Eloquent
+ */
 class WebsiteDataSource extends Model
 {
     use HasFactory;

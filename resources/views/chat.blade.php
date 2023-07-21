@@ -6,7 +6,8 @@
 
 
         <!-- Messages body -->
-        <div class="grow flex flex-col md:translate-x-0 transition-transform duration-300 ease-in-out" style="height: 100vh">
+        <div class="grow flex flex-col md:translate-x-0 transition-transform duration-300 ease-in-out"
+             style="height: 100vh">
 
             <!-- Header -->
             <div class="">
@@ -196,7 +197,7 @@
                             <label for="message-input" class="sr-only">Type a message</label>
                             <input id="message-input"
                                    class="form-input w-full bg-slate-100 border-transparent focus:bg-white focus:border-slate-300"
-                                   type="text" placeholder="Write your question here..."  autocomplete="off"/>
+                                   type="text" placeholder="Write your question here..." autocomplete="off"/>
                         </div>
                         <button
                             class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap"
@@ -205,7 +206,8 @@
                     </form>
                 </div>
                 <div style="text-align: center; background: white;font-size: 12px">
-                    Powered by <strong><a href="https://openchat.so" target="_blank" class="text-indigo-500 hover:text-indigo-600">OpenChat</a></strong>
+                    Powered by <strong><a href="https://openchat.so" target="_blank"
+                                          class="text-indigo-500 hover:text-indigo-600">OpenChat</a></strong>
 
                 </div>
             </div>
@@ -215,7 +217,10 @@
     </div>
 @endsection
 
+
 @section('scripts')
+
+    <script src="/dashboard/js/marked.min.js"></script>
     <script>
 
         var currentMode = 'assistant';
@@ -247,7 +252,10 @@
             if (message === '') return;
 
             // Add the message to the history (for context)
-            messageHistory.push(message, chatPanel, messageInput);
+            messageHistory.push({
+                role: 'user',
+                content: message,
+            });
 
             // Remove empty {} from the history
             messageHistory = messageHistory.filter(function (el) {
@@ -265,7 +273,6 @@
 
             // Add loading icon to the chat panel
             addLoadingIcon(chatPanel);
-
 
             // Call the backend to send the message
             fetch("{{route('sendMessage', ['token' => $bot->getToken()])}}", {
@@ -297,16 +304,18 @@
                     var botMessage = botResponse.botReply
                     var botSources = botResponse.sources
 
-                    console.log(botSources)
+                    messageHistory.push({
+                        role: 'assistant',
+                        content: botMessage,
+                    });
+
                     pushMessageFromBot(botMessage, chatPanel, messageInput, botSources);
                 }
 
             }).catch(error => {
                 pushMessageFromBot("Something went wrong with the bot.", chatPanel, messageInput);
-                console.error(error);
+                messageInput.disabled = false;
             });
-
-
         }
 
         function manageOnTheWayIcon() {
@@ -387,8 +396,10 @@
 
         function pushMessageFromBot(message, chatPanel, messageInput, sources = []) {
 
+            const messageHtml = marked.parse(message);
+
             let sourcesHTML = '';
-            if(sources.length > 0) {
+            if (sources.length > 0) {
                 sourcesHTML = ``;
                 sources.slice(0, 2).forEach((source, index) => {
 
@@ -403,7 +414,7 @@
         <div>
             <div
                 class="text-sm bg-indigo-500 text-white p-3 rounded-lg rounded-tl-none border border-transparent shadow-md mb-1">
-                ${message}
+                ${messageHtml}
             </div>
             <div class="flex items-center">
                 ${sourcesHTML}

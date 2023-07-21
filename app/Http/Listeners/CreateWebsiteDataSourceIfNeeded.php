@@ -31,8 +31,7 @@ class CreateWebsiteDataSourceIfNeeded
         $dataSource->setIcon($this->getLogo($event->getChatbotWebsite()));
         $dataSource->save();
 
-
-        event(new WebsiteDataSourceWasAdded($botId, $dataSource->getId()));
+        WebsiteDataSourceWasAdded::dispatch($botId, $dataSource->getId());
     }
 
 }

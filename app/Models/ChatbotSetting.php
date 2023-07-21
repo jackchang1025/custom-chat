@@ -6,6 +6,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\ChatbotSetting
+ *
+ * @property string $id
+ * @property string $chatbot_id
+ * @property string $name
+ * @property string $value
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chatbot|null $chatbot
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereChatbotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatbotSetting whereValue($value)
+ * @mixin \Eloquent
+ */
 class ChatbotSetting extends Model
 {
     use HasFactory;

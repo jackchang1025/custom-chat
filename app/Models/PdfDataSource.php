@@ -8,6 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
+/**
+ * App\Models\PdfDataSource
+ *
+ * @property string $id
+ * @property string $chatbot_id
+ * @property array $files
+ * @property string|null $folder_name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $ingest_status
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereChatbotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereFiles($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereFolderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereIngestStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PdfDataSource whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class PdfDataSource extends Model
 {
     use HasFactory;

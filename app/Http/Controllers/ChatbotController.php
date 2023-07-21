@@ -11,7 +11,9 @@ use App\Http\Requests\CreateChatbotViaPdfFlowRequest;
 use App\Http\Requests\SendChatMessageRequest;
 use App\Http\Requests\UpdateCharacterSettingsRequest;
 use App\Http\Responses\ChatbotResponse;
+use App\Http\Services\ChatMessageHistoryLoader;
 use App\Http\Services\HandlePdfDataSource;
+use App\Jobs\FileLoaderJob;
 use App\Models\Chatbot;
 use App\Models\ChatHistory;
 use App\Models\CodebaseDataSource;
@@ -19,7 +21,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Mindwave\Mindwave\Facades\Mindwave;
+use Mindwave\Mindwave\Memory\ConversationBufferMemory;
 use Ramsey\Uuid\Uuid;
 
 class ChatbotController extends Controller
@@ -92,7 +97,6 @@ class ChatbotController extends Controller
         // Get the PDF files from the request
         $files = $request->file('pdffiles');
 
-        // Handle the PDF data source
         $dataSource = (new HandlePdfDataSource($chatbot, $files))->handle(); // todo this should be moved to an event listener similar to the one in the previous method
 
         // Trigger the PdfDataSourceWasAdded event
@@ -146,24 +150,28 @@ class ChatbotController extends Controller
             return !is_null($value) && $value !== '' && $value !== [] && $value !== (object) [];
         });
 
-        // Call the API to send the message to the chatbot with a timeout of 5 seconds
-        $response = Http::timeout(200)->post("http://llm-server:3000/api/chat", [
-            'question' => $question,
-            'history' => $history,
-            'namespace' => $bot->getId()->toString(),
-            'mode' => $mode,
-            'initial_prompt' => $initialPrompt,
-        ]);
+        $agent = Mindwave::agent(
+            memory: ConversationBufferMemory::fromMessages($history)
+        );
 
-        if ($response->failed()) {
+
+        try {
+
+            $answer = $agent->ask($question);
+
+        } catch (\Exception $e) {
+
+            Log::error('Error processing chat: {error}' ,['error'=>$e]);
+
+            dd($e);
             return response()->json([
-                'error' => 'Something went wrong',
+                'error' => $e->getMessage(),
+//                'error' => 'Something went wrong',
             ], 500);
         }
 
         // Create a ChatbotResponse instance from the API response
-        $botResponse = new ChatbotResponse($response->json());
-
+//        $botResponse = new ChatbotResponse($response->json());
 
         $sessionId = Cookie::get('chatbot_' . $bot->getId()->toString());
 
@@ -180,7 +188,7 @@ class ChatbotController extends Controller
             $history->setId(Uuid::uuid4());
             $history->setChatbotId($bot->getId());
             $history->setFromBot();
-            $history->setMessage($botResponse->getBotReply());
+            $history->setMessage($answer);
             $history->setSessionId($sessionId);
             $history->save();
         }
@@ -188,8 +196,8 @@ class ChatbotController extends Controller
 
         // Return the response from the chatbot
         return response()->json([
-            'botReply' => $botResponse->getBotReply(),
-            'sources' => $botResponse->getSourceDocuments(),
+            'botReply' => $answer,
+            'sources' => '',
         ]);
     }
 

@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Http\Events\ChatbotWasCreated;
+use App\Http\Events\CrawlEvent;
 use App\Http\Events\PdfDataSourceWasAdded;
 use App\Http\Events\WebsiteDataSourceCrawlingWasCompleted;
 use App\Http\Events\WebsiteDataSourceWasAdded;
 use App\Http\Events\CodebaseDataSourceWasAdded;
+use App\Http\Listeners\CrawlListener;
 use App\Http\Listeners\CreateWebsiteDataSourceIfNeeded;
 use App\Http\Listeners\IngestPdfDataSource;
 use App\Http\Listeners\IngestWebsiteDataSource;
@@ -43,6 +45,9 @@ class EventServiceProvider extends ServiceProvider
         CodebaseDataSourceWasAdded::class => [
             IngestCodebaseDataSource::class
         ],
+        CrawlEvent::class=>[
+            CrawlListener::class
+        ]
     ];
 
     /**

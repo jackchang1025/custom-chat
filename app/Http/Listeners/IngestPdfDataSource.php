@@ -6,56 +6,61 @@ use App\Http\Enums\IngestStatusType;
 use App\Http\Events\PdfDataSourceWasAdded;
 use App\Models\PdfDataSource;
 use Exception;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Mindwave\Mindwave\Facades\DocumentLoader;
+use Mindwave\Mindwave\Facades\Mindwave;
 
 class IngestPdfDataSource implements ShouldQueue
 {
-
     /**
-     * @throws GuzzleException
      * @throws Exception
      */
-    public function handle($event)
+    public function handle(PdfDataSourceWasAdded $event): void
     {
-        if (!$event instanceof PdfDataSourceWasAdded) {
-            return;
-        }
-
-        $botId = $event->getChatbotId();
-        $pdfDataSourceId = $event->getPdfDataSourceId();
-
         try {
-            /** @var PdfDataSource $pdfDataSource */
-            $pdfDataSource = PdfDataSource::where('id', $pdfDataSourceId)->firstOrFail();
 
-            $requestBody = [
-                'type' => 'pdf',
-                'shared_folder' => $pdfDataSource->getFolderName(),
-                'namespace' => $botId,
-            ];
+            $pdfDataSource = PdfDataSource::where('id', $event->getPdfDataSourceId())->firstOrFail();
 
-            // Call to ingest service endpoint
-            $client = new Client();
-            $response = $client->request('POST', "http://llm-server:3000/api/ingest", [
-                'json' => $requestBody,
-                'timeout' => 200,
-            ]);
+            throw_unless($pdfDataSource->getFiles());
 
-            if ($response->getStatusCode() !== 200) {
-                $pdfDataSource->setStatus(IngestStatusType::FAILED);
-                $pdfDataSource->save();
-                return;
-            }
+            $this->processPdfDataSource($pdfDataSource);
 
             $pdfDataSource->setStatus(IngestStatusType::SUCCESS);
             $pdfDataSource->save();
 
-        } catch (Exception $e) {
+        } catch (Exception|\Throwable $e) {
+            Log::error('Error processing PDF data source: ' . $e->getMessage());
+
+            if ($e instanceof ModelNotFoundException) {
+                return;
+            }
+
             $pdfDataSource->setStatus(IngestStatusType::FAILED);
             $pdfDataSource->save();
-            return;
+        }
+    }
+
+    private function processPdfDataSource(PdfDataSource $pdfDataSource): void
+    {
+        foreach ($pdfDataSource->getFiles() as $file) {
+            $filePath = "{$pdfDataSource->getFolderName()}/$file";
+
+            if (!Storage::fileExists($filePath)) {
+                continue;
+            }
+
+            $document = DocumentLoader::loader('pdf', Storage::get($filePath));
+
+            if ($document === null) {
+                Storage::delete($filePath);
+                continue;
+            }
+
+            Mindwave::brain()->consume($document);
         }
     }
 }
